@@ -3,28 +3,41 @@ import LoginScreen from './loginscreen.js';
 import RegistrationScreen from './registrationscreen.js';
 import { useNavigation } from '@react-navigation/native';
 import Background from '../components/Background'
-import Logo from '../components/Logo'
-import Header from '../components/Header'
-import Button from '../components/Button'
+import Logo from '../components/Logos/Logo'
+import Header from '../components/Headers/Header'
+import Button from '../components/Buttons/Button'
 import Paragraph from '../components/Paragraph'
+import PageFooter from '../components/Footers/PageFooter'
 import {
-  StyleSheet
+  StyleSheet,View
 } from 'react-native';
-
 export default function WelcomeScreen () {
   const navigation = useNavigation();
   return (
-<Background>
-<Logo />
-<Button
-  mode="contained"
-  onPress={() => navigation.navigate('LoginScreen')}
->
-  Get Started
-</Button>
-</Background>
+    
+      <View style={{ flex: 1 }}>
+        <Background>
+          <Logo />
+          <Button
+            mode="outlined"
+            onPress={() => navigation.navigate('LoginScreen')}
+          >
+            Get Started
+          </Button>
+        </Background>
+      </View>
+    
     );
+   
   }
+  const styles = StyleSheet.create({
+    maincontain:{
+      backgroundColor: '#9372db',
+      alignItems: 'center',
+      justifyContent: 'flex',
+  
+    },})
+
   /*
 const styles = StyleSheet.create({
   maincontain:{

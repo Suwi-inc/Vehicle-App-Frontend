@@ -1,29 +1,32 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity ,DatePickerIOS} from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
-import Logo from '../components/Logo'
-import Header from '../components/Header'
-import Button from '../components/Button'
+import Logo from '../components/Logos/Logo'
+import Header from '../components/Headers/Header'
+import Button from '../components/Buttons/Button'
 import TextInput from '../components/TextInput'
-import BackButton from '../components/BackButton'
+import BackButton from '../components/Buttons/BackButton'
 import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
-import DatePicker from 'react-native-datepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import User from '../data/user.js'
 
 export default function RegistrationScreen({ navigation }) {
     
-
   const [username, setUsername] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
   const [confpassword, setPasswordConf] = useState('');
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState(new Date());
+
+  
 
   const onSignUpPressed = () => {
-    const nameError = nameValidator(name.value)
+    
+    const nameError = nameValidator(username.value)
     const emailError = emailValidator(email.value)
     const passwordError = passwordValidator(password.value)
     if (emailError || passwordError || nameError) {
@@ -32,11 +35,34 @@ export default function RegistrationScreen({ navigation }) {
       setPassword({ ...password, error: passwordError })
       return
     }
+    
+    const newUser = {
+      username: username.value,
+      email: email.value,
+      password: password.value,
+      dateOfBirth: date
+    };
+    
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Dashboard' }],
+      routes: [{ name: 'Dashboard', params: { User: newUser } }],
     })
   }
+  //date
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    console.warn("A date has been picked: ", date)
+    setDate(date)
+    hideDatePicker();
+  };
 
 
 
@@ -83,44 +109,39 @@ export default function RegistrationScreen({ navigation }) {
         errorText={confpassword.error}
         secureTextEntry
       />
-      <DatePicker
-      style={{ width: '100%', marginVertical: 12,
-      paddingVertical: 4}}
-      date={date}
-      mode="date"
-      placeholder="select date"
-      format="YYYY-MM-DD"
-      minDate="2000-01-01"
-      maxDate="2023-01-01"
-      confirmBtnText="Confirm"
-      cancelBtnText="Cancel"
-      customStyles={{
-        dateIcon: {
-          position: 'absolute',
-          left: 0,
-          top: 4,
-          marginLeft: 0
-        },
-        dateInput: {
-          marginLeft: 0
-        }
-      }}
-      onDateChange={(newDate) => setDate(newDate)}
-    />
+
+
+    <TouchableOpacity  onPress={showDatePicker}>
+          <Text style={styles.linkDate}>Date of birth</Text>
+        </TouchableOpacity>
+    
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+   
+    
 
       <Button
         mode="contained"
         onPress={onSignUpPressed}
-        style={{ marginTop: 24 }}
+        style={{ marginTop: 24, }}
       >
         Sign Up
       </Button>
+
       <View style={styles.row}>
         <Text>Already have an account? </Text>
         <TouchableOpacity onPress={() => navigation.replace('LoginScreen')}>
           <Text style={styles.link}>Login</Text>
         </TouchableOpacity>
       </View>
+
+    
+  
+
     </Background>
    
 );
@@ -135,75 +156,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
+  linkDate: {
+    fontWeight: 'bold',
+    color: theme.colors.primary,
+    marginTop: 20,
+  },
 })
 
 
-/* <View style={styles.container}>
-   <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        />
-   <TextInput
-    style={styles.input}
-    placeholder="Password"
-    secureTextEntry
-    value={password}
-    onChangeText={setPassword}
-   />
-   <TextInput
-    style={styles.input}
-    placeholder="Confirm password"
-    secureTextEntry
-    value={confpassword}
-    onChangeText={setPasswordConf}
-   />
-   <TextInput
-    style={styles.input}
-    placeholder="E-mail Address"
-    value={email}
-    onChangeText={setEmail}
-   />
-   <DatePicker
-      style={{ width: 200 }}
-      date={date}
-      mode="date"
-      placeholder="select date"
-      format="YYYY-MM-DD"
-      minDate="2000-01-01"
-      maxDate="2023-01-01"
-      confirmBtnText="Confirm"
-      cancelBtnText="Cancel"
-      customStyles={{
-        dateIcon: {
-          position: 'absolute',
-          left: 0,
-          top: 4,
-          marginLeft: 0
-        },
-        dateInput: {
-          marginLeft: 36
-        }
-      }}
-      onDateChange={(newDate) => setDate(newDate)}
-    />
-   
-    <Button title="Sign Up" onPress={() => {alert("registering a new user")}  } />
-  </View> 
-
-const styles = StyleSheet.create({
-container: {
-flex: 1,
-alignItems: 'center',
-justifyContent: 'center',
-},
-input: {
-width: 200,
-height: 44,
-padding: 10,
-borderWidth: 1,
-borderColor: 'black',
-marginVertical: 10,
-},
-});*/

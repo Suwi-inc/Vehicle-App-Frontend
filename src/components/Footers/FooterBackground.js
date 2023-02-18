@@ -1,11 +1,11 @@
 import React from 'react'
 import { ImageBackground, StyleSheet, KeyboardAvoidingView } from 'react-native'
-import { theme } from '../core/theme'
+import { theme } from '../../core/theme'
 
-export default function Background({ children }) {
+export default function FooterBackground({ children }) {
   return (
     <ImageBackground
-      source={require('../assets/background_dot.png')}
+      source={require('../../assets/background_dot.png')}
       resizeMode="repeat"
       style={styles.background}
     >
@@ -20,15 +20,15 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     width: '100%',
-    backgroundColor: '#f8f2ff' //theme.colors.surface,
+    backgroundColor: '#e4d6ff' //theme.colors.surface,
   },
   container: {
     flex: 1,
-    padding: 0,
-    width: '88%',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    padding: 10,
+    width:'100%',
     
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 })
